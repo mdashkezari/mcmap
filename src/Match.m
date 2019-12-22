@@ -104,9 +104,17 @@ classdef Match
             % Returns a compiled table of the source and matched target data sets.
             function shifted = shift_dt(dt, delta)
                 delta = double(delta);
-                dt = datetime(dt, 'InputFormat', 'yyyy-MM-dd');
+                dtFormat = 'yyyy-MM-dd';
+                if contains(dt, 'T')
+                    dt = strrep(dt, 'T', ' ');
+                    if contains(dt, '.000Z')
+                        dt = strrep(dt, '.000Z', '');
+                    end                            
+                    dtFormat = 'yyyy-MM-dd HH:mm:SS';
+                end
+                dt = datetime(dt, 'InputFormat', dtFormat);
                 dt = dt + days(delta);
-                % TODO: Handel monthly climatology data sets
+                % TODO: Handle monthly climatology data sets
                 shifted = datestr(dt, 'yyyy-mm-dd HH:MM:SS');
             end
             
@@ -138,9 +146,9 @@ classdef Match
                 if i == 1
                     tbl = data;                    
                 elseif (...
-                      tbl(:, 1) == data(:, 1) &&... 
-                      tbl.lat == data.lat &&... 
-                      tbl.lon == data.lon...
+                      all(table2array(tbl(:, 1) == data(:, 1))) &&... 
+                      all(table2array(tbl.lat(:) == data.lat(:))) &&... 
+                      all(table2array(tbl.lon == data.lon))...
                       )
                     tbl(:, self.targetVariables{i}) = data(:, self.targetVariables{i});
                     tbl(:, strcat(self.targetVariables{i}, '_std')) = data(:, strcat(self.targetVariables{i}, '_std'));

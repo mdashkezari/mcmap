@@ -387,6 +387,44 @@ classdef CMAP
         end
         
         
+
+        function tbl = match(sourceTable, sourceVar, targetTables, targetVars,... 
+             dt1, dt2, lat1, lat2, lon1, lon2, depth1, depth2,... 
+             temporalTolerance, latTolerance, lonTolerance, depthTolerance)        
+        % Colocalizes the source variable (from source table) with the target variable (from target table).
+        % The tolerance parameters set the matching boundaries between the source and target data sets. 
+        % Returns a table containing the source variable joined with the target variable.
+        tbl = Match('uspMatch', sourceTable, sourceVar, targetTables, targetVars,...
+                     dt1, dt2, lat1, lat2, lon1, lon2, depth1, depth2,...
+                     temporalTolerance, latTolerance, lonTolerance, depthTolerance).compile();
+        end
+
+        
+        
+
+        function tbl = along_track(cruise, targetTables, targetVars, depth1, depth2, temporalTolerance, latTolerance, lonTolerance, depthTolerance)     
+            % Takes a cruise name and colocalizes the cruise track with the specified variable(s).
+
+            df = CMAP.cruise_bounds(cruise);
+            tbl = CMAP.match(...
+                             'tblCruise_Trajectory',...       % sourceTable
+                             string(df.ID(1)),...             % sourceVar
+                             targetTables,...                 % targetTables
+                             targetVars,...                   % targetVars
+                             df.dt1(1),...                    % dt1
+                             df.dt2(1),...                    % dt2
+                             df.lat1(1),...                   % lat1
+                             df.lat2(1),...                   % lat2
+                             df.lon1(1),...                   % lon1
+                             df.lon2(1),...                   % lon2
+                             depth1,...                       % depth1
+                             depth2,...                       % depth2
+                             temporalTolerance,...            % temporalTolerance
+                             latTolerance,...                 % latTolerance
+                             lonTolerance,...                 % lonTolerance
+                             depthTolerance...                % depthTolerance
+                             );
+        end
         
     end
 
