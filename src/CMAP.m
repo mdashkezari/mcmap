@@ -14,7 +14,7 @@ classdef CMAP
     % Handles RESTful requests to the Simons CMAP API.    
     
     properties
-        apiKey = CMAP.get_api_key()
+        apiKey 
     end
 
     
@@ -41,7 +41,12 @@ classdef CMAP
             % Returns CMAP API Key previously stored in a system variable (see set_api_key(api_key) function).
             apiKey = getenv('CMAP_API_KEY');
             if isempty(apiKey)
-                error('\n\n%s \n%s\n', 'CMAP API Key not found.', 'You may obtain an API Key from https://simonscmap.com.')
+                error('\n\n%s \n%s \n%s \n%s\n',... 
+                      'CMAP API Key not found.',... 
+                      'You may obtain an API Key from https://simonscmap.com.',... 
+                      'Record your API key on your machine permanently using the following command:',...
+                      'CMAP.set_api_key(''<Your API Key>'');'...
+                      )
             end   
         end
 
@@ -62,7 +67,8 @@ classdef CMAP
                 if k < numel(fn)
                     queryString = strcat(queryString, '&');
                 end    
-            end    
+            end
+            queryString = strrep(queryString, ' ', '%20');
         end
 
         function tbl = atomic_request(route, payload)
@@ -73,12 +79,12 @@ classdef CMAP
 
             baseURL = 'https://simonscmap.com';
             queryString = CMAP.encode_payload(payload);
-            uri = strcat(baseURL, route, queryString);
+            uri = strcat(baseURL, route, queryString);          
             r = RequestMessage('GET');
             prefixeKey = char(strcat('Api-Key', {' '}, CMAP.get_api_key()));
             field = matlab.net.http.field.GenericField('Authorization', prefixeKey);
             r = addFields(r, field);            
-            options = matlab.net.http.HTTPOptions('ConnectTimeout', NaN);            
+            options = matlab.net.http.HTTPOptions('ConnectTimeout', 2000);            
             [resp, ~, hist] = send(r, uri, options);
             status = getReasonPhrase(resp.StatusCode);
             tbl = CMAP.resp_to_table(resp.Body.Data);    

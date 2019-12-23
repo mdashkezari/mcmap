@@ -143,12 +143,16 @@ classdef Match
                     continue;
                 end    
                 fprintf('%d: %s matched.\n', i, self.targetVariables{i})
+                
+                
+                
+                
                 if i == 1
                     tbl = data;                    
                 elseif (...
-                      all(table2array(tbl(:, 1) == data(:, 1))) &&... 
-                      all(table2array(tbl.lat(:) == data.lat(:))) &&... 
-                      all(table2array(tbl.lon == data.lon))...
+                      isequal(tbl(:, 1), data(:, 1)) &&... 
+                      isequal(tbl.lat(:), data.lat(:)) &&... 
+                      isequal(tbl.lon(:), data.lon(:))...
                       )
                     tbl(:, self.targetVariables{i}) = data(:, self.targetVariables{i});
                     tbl(:, strcat(self.targetVariables{i}, '_std')) = data(:, strcat(self.targetVariables{i}, '_std'));
@@ -228,6 +232,7 @@ end
  
 
 % Match example
-% Match('uspMatch', 'tblKM1314_Cobalmins', 'Me_PseudoCobalamin_Particulate_pM', {'tblDarwin_Phytoplankton'}, {'picoprokaryote'}, '2013-08-11', '2013-09-05', 22.25, 450.25, -159.25, -127.75, -5, 305, {1}, {0.25}, {0.25}, {5}).compile()
+% CMAP.match('tblKM1314_Cobalmins', 'Me_PseudoCobalamin_Particulate_pM', {'tblDarwin_Phytoplankton'}, {'picoprokaryote'}, '2013-08-11', '2013-09-05', 22.25, 450.25, -159.25, -127.75, -5, 305, {1}, {0.25}, {0.25}, {5})
+% CMAP.along_track('KOK1606', {'tblAltimetry_REP', 'tblCHL_REP'}, {'sla', 'chl'}, 0, 5, {1, 4}, {0.25, 0.25}, {0.25, 0.25}, {5, 5});
 
 
