@@ -15,8 +15,6 @@
 
 
 classdef Match
-        
-
     properties
         spname
         sourceTable
@@ -230,9 +228,3 @@ classdef Match
     end
 end
  
-
-% Match example
-% CMAP.match('tblKM1314_Cobalmins', 'Me_PseudoCobalamin_Particulate_pM', {'tblDarwin_Phytoplankton'}, {'picoprokaryote'}, '2013-08-11', '2013-09-05', 22.25, 450.25, -159.25, -127.75, -5, 305, {1}, {0.25}, {0.25}, {5})
-% CMAP.along_track('KOK1606', {'tblAltimetry_REP', 'tblCHL_REP'}, {'sla', 'chl'}, 0, 5, {1, 4}, {0.25, 0.25}, {0.25, 0.25}, {5, 5});
-
-
